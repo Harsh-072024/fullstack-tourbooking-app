@@ -1,40 +1,51 @@
+import jwt from "jsonwebtoken";
 
-import jwt from "jsonwebtoken"
+const verifyToken = (req, res, next) => {
+    const token = req.cookies?.accessToken;
 
-const verifyToken = (req,res,next)=>{
-    const token = req.cookies.accessToken
-
-    if(!token){
-        return res.status(401).json({success:false, message:"You are not authorise"})
+    if (!token) {
+        return res.status(401).json({
+            success: false,
+            message: "You are not authorized. Token missing.",
+        });
     }
 
-    // if token is exist then verify the token
-    jwt.verify(token, process.env.JWT_SECRET_KEY, (err, user)=>{
-        if(err){
-            return res.status(401).json({success:false, message:"token is invalid"})
+    // Verify the token
+    jwt.verify(token, process.env.JWT_SECRET_KEY, (err, user) => {
+        if (err) {
+            return res.status(401).json({
+                success: false,
+                message: "Token is invalid or expired.",
+            });
         }
 
-        req.user = user
-        next()// dont forget to call next
-    })
-}
+        req.user = user; // Attach the user data to the request object
+        next(); // Proceed to the next middleware or route handler
+    });
+};
 
-export const verifyUser = (req,res, next)=>{
-    verifyToken(req,res,next, ()=>{
-        if(req.user.id === req.params.id || req.user.role === 'admin'){
-            next()   
-        }else{
-          return  res.status(401).json({succes:false, message:"You are not authenticated"})
+export const verifyUser = (req, res, next) => {
+    verifyToken(req, res, () => {
+        if (req.user?.id === req.params.id || req.user?.role === "admin") {
+            next(); // User is authenticated
+        } else {
+            return res.status(403).json({
+                success: false,
+                message: "You are not authenticated to perform this action.",
+            });
         }
     });
 };
 
-export const verifyAdmin = (req,res, next)=>{
-    verifyToken(req,res,next, ()=>{
-        if(req.user.id === req.params.id || req.user.role === 'admin'){
-            next()   
-        }else{
-           return res.status(401).json({succes:false, message:"You are not authorize"})
+export const verifyAdmin = (req, res, next) => {
+    verifyToken(req, res, () => {
+        if (req.user?.role === "admin") {
+            next(); // User is an admin
+        } else {
+            return res.status(403).json({
+                success: false,
+                message: "You are not authorized to access this resource.",
+            });
         }
     });
 };
