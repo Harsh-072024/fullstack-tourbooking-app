@@ -1,6 +1,11 @@
 import User from "../models/User.js";
+<<<<<<< HEAD
 import bcrypt from "bcryptjs"; // Change to bcryptjs
 import jwt from "jsonwebtoken";
+=======
+import bcrypt from "bcryptjs"
+import  jwt from "jsonwebtoken";
+>>>>>>> f6d86307565241f8016142b8d4a1d67ca9f3e161
 
 // User registration
 export const register = async (req, res) => {
@@ -36,6 +41,7 @@ export const login = async (req, res) => {
       console.log("User not found"); // Log if user is not found
       return res.status(404).json({ success: false, message: "User not found" });
     }
+<<<<<<< HEAD
 
     // Compare password
     const checkCorrectPassword = bcrypt.compareSync(
@@ -78,3 +84,7 @@ export const login = async (req, res) => {
     res.status(500).json({ success: false, message: "Failed to login", error: error.message });
   }
 };
+=======
+  };
+  
+>>>>>>> f6d86307565241f8016142b8d4a1d67ca9f3e161
