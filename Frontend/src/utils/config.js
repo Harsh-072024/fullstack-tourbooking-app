@@ -1,1 +1,1 @@
-export const BASE_URL = 'tour-full-stack-rust.vercel.app'
+export const BASE_URL = 'https://tour-full-stack-gm0da0zkk-harshs-projects-cb714ad0.vercel.app/'
