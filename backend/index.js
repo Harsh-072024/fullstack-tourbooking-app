@@ -16,8 +16,11 @@ const port = process.env.PORT || 8000;
 
 // CORS configuration
 const corsOptions = {
-    origin: "*", // Replace with your frontend URL during development
-    credentials: true, // Allow credentials (cookies, authorization headers, etc.)
+    origin: [
+        "http://localhost:3000", // Local development
+        "https://tour-full-stack-frontend.vercel.app" // Deployed frontend
+    ],
+    credentials: true,
 };
 
 // Database connection
@@ -35,15 +38,39 @@ app.get("/", (req, res) => {
     res.send("API is working");
 });
 
+// Debugging Middleware: Log incoming requests
+app.use((req, res, next) => {
+    console.log(`[DEBUG] Incoming request from ${req.headers.origin}`);
+    console.log(`[DEBUG] Request URL: ${req.url}`);
+    console.log(`[DEBUG] Request Method: ${req.method}`);
+    next();
+});
+
 // Middleware
 app.use(express.json());
 app.use(cors(corsOptions)); // Apply CORS middleware
 app.use(cookieParser());
+
+// Routes
 app.use("/api/v1/auth", authRoute);
 app.use("/api/v1/tours", tourRoute);
 app.use("/api/v1/users", userRoute);
 app.use("/api/v1/review", reviewRoute);
 app.use("/api/v1/booking", bookingRoute);
+
+// Debugging Middleware: Log response status
+app.use((req, res, next) => {
+    res.on("finish", () => {
+        console.log(`[DEBUG] Response status: ${res.statusCode}`);
+    });
+    next();
+});
+
+// Error handling middleware (log errors)
+app.use((err, req, res, next) => {
+    console.error(`[ERROR] ${err.message}`);
+    res.status(500).send("Internal Server Error");
+});
 
 // Start server
 app.listen(port, () => {
