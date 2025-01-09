@@ -6,7 +6,7 @@ export const createReview = async (req, res) => {
 
   // Add tourId to the review object
   const newReview = new Review({ 
-    ...req.body, 
+    ...req.body,
     tourId: tourId  // associate review with the tour
   });
 

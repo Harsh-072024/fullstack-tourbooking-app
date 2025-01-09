@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 
-const verifyToken = (req, res, next) => {
+// Middleware to verify token
+export const verifyToken = (req, res, next) => {
     const token = req.cookies?.accessToken;
 
     if (!token) {
@@ -24,27 +25,29 @@ const verifyToken = (req, res, next) => {
     });
 };
 
+// Middleware to verify user
 export const verifyUser = (req, res, next) => {
-    verifyToken(req, res, () => {
-        if (req.user?.id === req.params.id || req.user?.role === "admin") {
+    verifyToken(req, res, next, () => {
+        if (req.user.id === req.params.id || req.user.role === "admin") {
             next(); // User is authenticated
         } else {
             return res.status(403).json({
                 success: false,
-                message: "You are not authenticated to perform this action.",
+                message: "You are not authenticated .",
             });
         }
     });
 };
 
+// Middleware to verify admin
 export const verifyAdmin = (req, res, next) => {
-    verifyToken(req, res, () => {
-        if (req.user?.role === "admin") {
+    verifyToken(req, res, next, () => {
+        if (req.user.role === "admin") {
             next(); // User is an admin
         } else {
             return res.status(403).json({
                 success: false,
-                message: "You are not authorized to access this resource.",
+                message: "You are not authorized .",
             });
         }
     });

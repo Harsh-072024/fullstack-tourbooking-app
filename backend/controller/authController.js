@@ -38,7 +38,7 @@ export const login = async (req, res) => {
     }
 
     // Compare password
-    const checkCorrectPassword = bcrypt.compareSync(
+    const checkCorrectPassword = await bcrypt.compare(
       req.body.password,
       user.password
     );
