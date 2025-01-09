@@ -16,7 +16,7 @@ const port = process.env.PORT || 8000;
 
 // CORS configuration
 const corsOptions = {
-    origin: "http://localhost:3000", // Replace with your frontend URL during development
+    origin: "*", // Replace with your frontend URL during development
     credentials: true, // Allow credentials (cookies, authorization headers, etc.)
 };
 
