@@ -15,10 +15,6 @@
         "Access-Control-Allow-origin": "*"
       }
     }
-  ],
-  "functions": {
-    "api/**/*.js": {
-      "maxDuration": 60
-    }
-  }
+  ]
+  
 }
