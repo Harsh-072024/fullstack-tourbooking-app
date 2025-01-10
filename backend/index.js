@@ -17,8 +17,7 @@ const port = process.env.PORT || 8000;
 // CORS configuration
 const corsOptions = {
     origin: [
-        "http://localhost:3000", // Local development
-        "https://tour-full-stack-frontend.vercel.app" // Deployed frontend
+        "*"
     ],
     credentials: true,
 };
