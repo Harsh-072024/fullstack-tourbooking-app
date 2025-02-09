@@ -1,82 +1,78 @@
-import express from "express";
-import dotenv from "dotenv";
-import mongoose from "mongoose";
-import cors from "cors";
-import cookieParser from "cookie-parser";
-import path from "path"
+import express from 'express';
+import dotenv from 'dotenv';
+import mongoose from 'mongoose';
+import cors from 'cors';
+import cookieParser from 'cookie-parser';
+import path from 'path';
 
-import tourRoute from "./routes/tours.js";
-import userRoute from "./routes/users.js";
-import authRoute from "./routes/auth.js";
-import reviewRoute from "./routes/reviews.js";
-import bookingRoute from "./routes/bookings.js";
+import tourRoute from './routes/tours.js';
+import userRoute from './routes/users.js';
+import authRoute from './routes/auth.js';
+import reviewRoute from './routes/reviews.js';
+import bookingRoute from './routes/bookings.js';
 
 dotenv.config();
 const app = express();
-const port = process.env.PORT || 8000;
+const port = process.env.PORT || 4000;
 const __dirname = path.resolve();
 
-// Variable to track if MongoDB connection has been established
 let isConnected = false;
 
-// Database connection function with pooling and retry logic
-const connect = async () => {
+// Database connection function
+const connectDB = async () => {
   if (isConnected) {
     console.log("Using existing MongoDB connection");
     return;
   }
 
   try {
-    // Ensure we are using the correct MongoDB URI
     await mongoose.connect(process.env.MONGO_URI);
-
     isConnected = true;
-    console.log("MongoDB database connected");
+    console.log("✅ MongoDB database connected");
   } catch (err) {
-    console.error("MongoDB database connection failed:", err);
-    // Retry logic in case of failure
-    setTimeout(connect, 5000); // Retry connection after 5 seconds
+    console.error("❌ MongoDB connection failed:", err);
+    console.log("🔄 Retrying in 5 seconds...");
+    setTimeout(connectDB, 5000);
   }
 };
 
 // Define CORS options
 const corsOptions = {
-  origin: "http://localhost:3000", // Adjust the front-end URL if necessary
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], //Allowed methods
-  allowedHeaders: ["Content-Type", "Authorization"], //allowed headers
+  origin: process.env.FRONTEND_URL || "http://localhost:3000",
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true,
 };
 
-// Apply CORS middleware
+// Apply middleware
 app.use(cors(corsOptions));
-
-// Middleware
 app.use(express.json());
 app.use(cookieParser());
 
-// Test Route
-app.get("/", (req, res) => {
-  res.send("API is working");
-});
 
-// Routes
+// API Routes
 app.use("/api/v1/auth", authRoute);
 app.use("/api/v1/tours", tourRoute);
 app.use("/api/v1/users", userRoute);
 app.use("/api/v1/review", reviewRoute);
 app.use("/api/v1/booking", bookingRoute);
 
+// Test Route
+app.get("/test", (req, res) => {
+  res.send("API is working");
+});
 
-if(process.env.NODE_ENV=="production"){
-  app.use(express.static(path.join(__dirname, "./frontend/build")));
-
-  app.get("*", (req, res) =>{
-    res.sendFile(path.join(__dirname, "./frontend", "build", "index.html"));
-  })
+// Serve React App in production
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "../frontend/build")));
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "../frontend", "build", "index.html"));
+  });
 }
 
-// Start the server with a retry mechanism
-app.listen(port, () => {
-  console.log(`Server listening on port ${port}`);
-  connect(); // Ensure the database connection is established before accepting requests
+
+// Start server
+app.listen(port, async () => {
+  console.log(`🚀 Server running on port ${port}`);
+  await connectDB();
 });

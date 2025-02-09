@@ -1,17 +1,16 @@
-import React from 'react'
+import React from 'react';
+import Header from '../Header/Header'; // Import Header component
+import Routers from '../../router/Routers'; // Import Routers component
+import Footer from '../Footer/Footer'; // Import Footer component
 
-
-import Header from '../Header/Header';
-import Routers from '../../router/Routers';
-import Footer from '../Footer/Footer';
 const Layout = () => {
   return (
-    <>
-    <Header />
-    <Routers />
-    <Footer />
-    </>
-  )
+    <div className="layout">
+      <Header /> {/* Header component */}
+      <Routers /> {/* Routes for the app */}
+      <Footer /> {/* Footer component */}
+    </div>
+  );
 }
 
-export default Layout
+export default Layout;
