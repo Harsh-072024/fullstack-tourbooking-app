@@ -50,13 +50,14 @@
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Harsh-072024/tours-client.git"
+    "url": "git+https://github.com/Harsh-072024/fullstack-tourbooking-app.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Harsh-072024/tours-client/issues"
+    "url": "https://github.com/Harsh-072024/fullstack-tourbooking-app/issues"
   },
-  "homepage": "/"
+  "homepage": "/home"
+
 }
