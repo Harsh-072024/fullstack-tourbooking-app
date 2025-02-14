@@ -13,7 +13,7 @@ import bookingRoute from './routes/bookings.js';
 
 dotenv.config();
 const app = express();
-const port = process.env.PORT || 4000;
+const port = process.env.PORT || 5000;
 const __dirname = path.resolve();
 
 let isConnected = false;
